@@ -289,7 +289,7 @@ parameter_types! {
 	type DepositPerStorageItem = DepositPerStorageItem;
 	type RentFraction = RentFraction;
 	type SurchargeReward = SurchargeReward;
-	type WeightPrice = pallet_transaction_payment::Module<Self>;
+	type WeightPrice = pallet_transaction_payment::Pallet<Self>;
 	type WeightInfo = pallet_contracts::weights::SubstrateWeight<Self>;
 	type ChainExtension = ();
 	type DeletionQueueDepth = DeletionQueueDepth;
@@ -301,7 +301,7 @@ parameter_types! {
 	 /// and make sure they are stable. Dispatchables exposed to contracts are not allowed to
 	 /// change because that would break already deployed contracts. The `Call` structure itself
 	 /// is not allowed to change the indices of existing pallets, too.
-	 type CallFilter = DenyAll;
+	 type CallFilter = frame_support::traits::DenyAll;
 	 type Schedule = Schedule;
 	 type CallStack = [pallet_contracts::Frame<Self>; 31];
  }
@@ -559,6 +559,49 @@ impl_runtime_apis! {
 			TransactionPayment::query_fee_details(uxt, len)
 		}
 	}
+
+	/*** Add This Block ***/
+	impl pallet_contracts_rpc_runtime_api::ContractsApi<Block, AccountId, Balance, BlockNumber, Hash>
+	for Runtime
+	{
+	   fn call(
+		  origin: AccountId,
+		  dest: AccountId,
+		  value: Balance,
+		  gas_limit: u64,
+		  input_data: Vec<u8>,
+	   ) -> pallet_contracts_primitives::ContractExecResult {
+		  let debug = true;
+		  Contracts::bare_call(origin, dest, value, gas_limit, input_data, debug)
+	   }
+ 
+	   fn instantiate(
+		  origin: AccountId,
+		  endowment: Balance,
+		  gas_limit: u64,
+		  code: pallet_contracts_primitives::Code<Hash>,
+		  data: Vec<u8>,
+		  salt: Vec<u8>,
+	   ) -> pallet_contracts_primitives::ContractInstantiateResult<AccountId, BlockNumber> {
+		  let compute_rent_projection = true;
+		  let debug = true;
+		  Contracts::bare_instantiate(origin, endowment, gas_limit, code, data, salt, compute_rent_projection, debug)
+	   }
+ 
+	   fn get_storage(
+		  address: AccountId,
+		  key: [u8; 32],
+	   ) -> pallet_contracts_primitives::GetStorageResult {
+		  Contracts::get_storage(address, key)
+	   }
+ 
+	   fn rent_projection(
+		  address: AccountId,
+	   ) -> pallet_contracts_primitives::RentProjectionResult<BlockNumber> {
+		  Contracts::rent_projection(address)
+	   }
+	}
+	/*** End Added Block ***/
 
 	#[cfg(feature = "runtime-benchmarks")]
 	impl frame_benchmarking::Benchmark<Block> for Runtime {

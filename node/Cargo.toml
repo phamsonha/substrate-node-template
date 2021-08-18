@@ -171,6 +171,22 @@ git = 'https://github.com/paritytech/substrate.git'
 tag = 'monthly-2021-08'
 version = '4.0.0-dev'
 
+# *** Add the following lines ***
+[dependencies.pallet-contracts]
+git = 'https://github.com/paritytech/substrate.git'
+tag = 'monthly-2021-08'
+version = '4.0.0-dev'
+
+[dependencies.pallet-contracts-rpc]
+git = 'https://github.com/paritytech/substrate.git'
+tag = 'monthly-2021-08'
+version = '4.0.0-dev'
+
+[dependencies.sc-chain-spec]
+git = 'https://github.com/paritytech/substrate.git'
+tag = 'monthly-2021-08'
+version = '4.0.0-dev'
+
 [features]
 default = []
 runtime-benchmarks = ['node-template-runtime/runtime-benchmarks']

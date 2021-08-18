@@ -1,0 +1,8 @@
+node 1: 
+ID: 12D3KooWGoWqNUaeg1qy2npKY1r6SEWsnFtgKZQjaTzNgTKTSq73
+port: 30333
+
+node 2:
+12D3KooWLbQQca88KyCeD3gZUjawy11TfR5V25NmkE6un7YU8ka5
+port: 30334
+

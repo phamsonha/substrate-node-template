@@ -3635,8 +3635,11 @@ dependencies = [
  "frame-benchmarking-cli",
  "jsonrpc-core",
  "node-template-runtime",
+ "pallet-contracts",
+ "pallet-contracts-rpc",
  "pallet-transaction-payment-rpc",
  "sc-basic-authorship",
+ "sc-chain-spec",
  "sc-cli",
  "sc-client-api",
  "sc-consensus",
@@ -3680,7 +3683,9 @@ dependencies = [
  "pallet-balances",
  "pallet-contracts",
  "pallet-contracts-primitives",
+ "pallet-contracts-rpc-runtime-api",
  "pallet-grandpa",
+ "pallet-nicks",
  "pallet-randomness-collective-flip",
  "pallet-sudo",
  "pallet-template",
@@ -3945,6 +3950,37 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-contracts-rpc"
+version = "4.0.0-dev"
+source = "git+https://github.com/paritytech/substrate.git?tag=monthly-2021-08#4d28ebeb8b027ca0227fe7779c5beb70a7b56467"
+dependencies = [
+ "jsonrpc-core",
+ "jsonrpc-core-client",
+ "jsonrpc-derive",
+ "pallet-contracts-primitives",
+ "pallet-contracts-rpc-runtime-api",
+ "parity-scale-codec",
+ "serde",
+ "sp-api",
+ "sp-blockchain",
+ "sp-core",
+ "sp-rpc",
+ "sp-runtime",
+]
+
+[[package]]
+name = "pallet-contracts-rpc-runtime-api"
+version = "4.0.0-dev"
+source = "git+https://github.com/paritytech/substrate.git?tag=monthly-2021-08#4d28ebeb8b027ca0227fe7779c5beb70a7b56467"
+dependencies = [
+ "pallet-contracts-primitives",
+ "parity-scale-codec",
+ "sp-api",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "pallet-grandpa"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate.git?tag=monthly-2021-08#4d28ebeb8b027ca0227fe7779c5beb70a7b56467"
@@ -3963,6 +3999,19 @@ dependencies = [
  "sp-runtime",
  "sp-session",
  "sp-staking",
+ "sp-std",
+]
+
+[[package]]
+name = "pallet-nicks"
+version = "4.0.0-dev"
+source = "git+https://github.com/paritytech/substrate.git?tag=monthly-2021-08#4d28ebeb8b027ca0227fe7779c5beb70a7b56467"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "sp-io",
+ "sp-runtime",
  "sp-std",
 ]
 
