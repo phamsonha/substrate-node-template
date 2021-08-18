@@ -14,10 +14,11 @@ use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_core::{crypto::KeyTypeId, OpaqueMetadata};
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
-	traits::{AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, NumberFor, Verify},
+	traits::{AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, NumberFor, Verify, OpaqueKeys},
 	transaction_validity::{TransactionSource, TransactionValidity},
 	ApplyExtrinsicResult, MultiSignature,
 };
+use frame_system::EnsureRoot;
 use sp_std::prelude::*;
 #[cfg(feature = "std")]
 use sp_version::NativeVersion;
@@ -251,6 +252,26 @@ impl pallet_timestamp::Config for Runtime {
 }
 
 /*** Add This Block ***/
+
+impl validatorset::Config for Runtime {
+	type Event = Event;
+	type AddRemoveOrigin = EnsureRoot<AccountId>;
+}
+
+impl pallet_session::Config for Runtime {
+	type SessionHandler = <opaque::SessionKeys as OpaqueKeys>::KeyTypeIdProviders;
+	type ShouldEndSession = ValidatorSet;
+	type SessionManager = ValidatorSet;
+	type Event = Event;
+	type Keys = opaque::SessionKeys;
+	type NextSessionRotation = ValidatorSet;
+	type ValidatorId = <Self as frame_system::Config>::AccountId;
+	type ValidatorIdOf = validatorset::ValidatorOf<Self>;
+	type DisabledValidatorsThreshold = ();
+	type WeightInfo = ();
+}
+
+/*** Add This Block ***/
 parameter_types! {
 	pub TombstoneDeposit: Balance = deposit(
 	   1,
@@ -393,16 +414,20 @@ construct_runtime!(
 		System: frame_system::{Pallet, Call, Config, Storage, Event<T>},
 		RandomnessCollectiveFlip: pallet_randomness_collective_flip::{Pallet, Storage},
 		Timestamp: pallet_timestamp::{Pallet, Call, Storage, Inherent},
-		Aura: pallet_aura::{Pallet, Config<T>},
-		Grandpa: pallet_grandpa::{Pallet, Call, Storage, Config, Event},
 		Balances: pallet_balances::{Pallet, Call, Storage, Config<T>, Event<T>},
+		/*** Session ***/
+		Session: pallet_session::{Pallet, Call, Storage, Event, Config<T>},
+		/*** ValidatorSet ***/
+		ValidatorSet: validatorset::{Pallet, Call, Storage, Event<T>, Config<T>},
+		Aura: pallet_aura::{Pallet, Config<T>},
+		Grandpa: pallet_grandpa::{Pallet, Call, Storage, Config, Event}, 
 		Nicks: pallet_nicks::{Pallet, Call, Storage, Event<T>},
 		TransactionPayment: pallet_transaction_payment::{Pallet, Storage},
 		Sudo: pallet_sudo::{Pallet, Call, Config<T>, Storage, Event<T>},
 		// Include the custom logic from the pallet-template in the runtime.
 		TemplateModule: pallet_template::{Pallet, Call, Storage, Event<T>},
 		/*** Contracts ***/
-		Contracts: pallet_contracts::{Pallet, Call, Storage, Event<T>},
+		Contracts: pallet_contracts::{Pallet, Call, Storage, Event<T>}, 
 	}
 );
 

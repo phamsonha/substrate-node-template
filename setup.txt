@@ -1,8 +1,75 @@
+Pair 1
+Key	Value
+Secret phrase	clip organ olive upper oak void inject side suit toilet stick narrow
+Secret seed	0x4bd2b2c1dad3dbe3fa37dc6ad5a4e32ddd8ad84b938179ac905b0622880e86e7
+SR25519	
+Public key	0x9effc1668ca381c242885516ec9fa2b19c67b6684c02a8a3237b6862e5c8cd7e
+SS58 Address	5FfBQ3kwXrbdyoqLPvcXRp7ikWydXawpNs2Ceu3WwFdhZ8W4
+ED25519	
+Public key	0xb48004c6e1625282313b07d1c9950935e86894a2e4f21fb1ffee9854d180c781
+SS58 Address	5G9NWJ5P9uk7am24yCKeLZJqXWW6hjuMyRJDmw4ofqxG8Js2
+
+
+
+Pair 2
+Key	Value
+Secret phrase	paper next author index wedding frost voice mention fetch waste march tilt
+Secret seed	0x4846fedafeed0cf307da3e2b5dfa61415009b239119242006fc8c0972dde64b0
+SR25519	
+Public key	0x74cca68a32156615a5923c67024db70da5e7ed36e70c8cd5bcf3556df152bb6d
+SS58 Address	5EhrCtDaQRYjVbLi7BafbGpFqcMhjZJdu8eW8gy6VRXh6HDp
+ED25519	
+Public key	0x0fe9065f6450c5501df3efa6b13958949cb4b81a2147d68c14ad25366be1ccb4
+SS58 Address	5CRZoFgJs4zLzCCAGoCUUs2MRmuD5BKAh17pWtb62LMoCi9h
+
+
 node 1: 
 ID: 12D3KooWGoWqNUaeg1qy2npKY1r6SEWsnFtgKZQjaTzNgTKTSq73
 port: 30333
+ws: 9945
 
 node 2:
-12D3KooWLbQQca88KyCeD3gZUjawy11TfR5V25NmkE6un7YU8ka5
+12D3KooWFZjHKh8ZrMfTjjgF7c9BYzaWLqT1zErncRkipkrHkMJS
 port: 30334
+ws: 9946
 
+node 3:
+12D3KooWGvRT17VqYTPP4wqGvdHzyF2RexYVW3pPhNBGGYVVKd1F
+port: 30335
+ws: 9947
+
+./target/release/node-template build-spec --disable-default-bootnode --chain local > customSpec.json
+
+./target/release/node-template build-spec --chain=customSpec.json --raw --disable-default-bootnode > customSpecRaw.json
+
+./target/release/node-template purge-chain --base-path /tmp/node01 --chain local -y
+
+./target/release/node-template  --base-path /tmp/node01   --chain ./customSpecRaw.json   --port 30333   --ws-port 9945   --rpc-port 9933   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 0'   --validator   --rpc-methods Unsafe   --name MyNode01 --no-mdns
+
+./target/release/node-template purge-chain --base-path /tmp/node02 --chain local -y
+
+./target/release/node-template  --base-path /tmp/node02   --chain ./customSpecRaw.json   --port 30334   --ws-port 9946   --rpc-port 9934   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 0'   --validator   --rpc-methods Unsafe   --name MyNode02   --bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWGoWqNUaeg1qy2npKY1r6SEWsnFtgKZQjaTzNgTKTSq73 --no-mdns
+
+./target/release/node-template purge-chain --base-path /tmp/node03 --chain local -y
+
+./target/release/node-template  --base-path /tmp/node03   --chain ./customSpecRaw.json   --port 30335   --ws-port 9947   --rpc-port 9935   --telemetry-url 'wss://telemetry.polkadot.io/submit/ 0'   --validator   --rpc-methods Unsafe   --name MyNode03   --bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWGoWqNUaeg1qy2npKY1r6SEWsnFtgKZQjaTzNgTKTSq73 --no-mdns
+
+
+"aura": {
+        "authorities": [
+          "5FfBQ3kwXrbdyoqLPvcXRp7ikWydXawpNs2Ceu3WwFdhZ8W4",
+          "5EhrCtDaQRYjVbLi7BafbGpFqcMhjZJdu8eW8gy6VRXh6HDp"
+        ]
+      },
+      "grandpa": {
+        "authorities": [
+          [
+            "5G9NWJ5P9uk7am24yCKeLZJqXWW6hjuMyRJDmw4ofqxG8Js2",
+            1
+          ],
+          [
+            "5CRZoFgJs4zLzCCAGoCUUs2MRmuD5BKAh17pWtb62LMoCi9h",
+            1
+          ]
+        ]
+      },
